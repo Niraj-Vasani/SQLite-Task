@@ -37,29 +37,32 @@ class AuditEntityCubit extends Cubit<AuditEntityState> {
     try {
       final result = getAuditEntityUsecase.call(NoParams());
       result!.asStream().listen((enityData) async {
-        if (enityData!.length() == 0) {
-          final jsonData = await rootBundle.loadString("assets/entity.json");
-          final Map<String, dynamic> map = json.decode(jsonData);
-          final List<dynamic> list = map["auditEntity"];
-          var result = <AuditEntityModel>[];
-          list.forEach((element) {
-            var entity = AuditEntityModel.fromJson(element);
-            result.add(entity);
-          });
-          await addAuditEntityJsonIntoDbUsecase.call(result);
-        } else {
-          enityData.fold(
-            (failure) => emit(AuditEntityError(errorMsg: _mapFailureToMessage)),
-            (list) => emit(
-              AuditEntityLoaded(
-                auditEntityData: list as List<AuditEntityModel>,
-              ),
-            ),
-          );
-        }
+        enityData!.fold(
+          (failure) => emit(AuditEntityError(errorMsg: _mapFailureToMessage)),
+          (list) async {
+            if (list.length == 0) {
+              final jsonData =
+                  await rootBundle.loadString("assets/entity.json");
+              final Map<String, dynamic> map = json.decode(jsonData);
+              final List<dynamic> list = map["auditEntity"];
+              var resultList = <AuditEntityModel>[];
+              list.forEach((element) {
+                var entity = AuditEntityModel.fromJson(element);
+                resultList.add(entity);
+              });
+              await addAuditEntityJsonIntoDbUsecase.call(resultList);
+            } else {
+              emit(
+                AuditEntityLoaded(
+                  auditEntityData: list as List<AuditEntityModel>,
+                ),
+              );
+            }
+          },
+        );
       });
     } on Exception {
-      AuditEntityError(errorMsg: _mapFailureToMessage);
+      emit(AuditEntityError(errorMsg: _mapFailureToMessage));
     }
   }
 

@@ -31,11 +31,11 @@ class AuditEntityDataSourceImpl implements AuditEntityDataSource {
       );
       result.add(entity);
     });
-    if (result.isNotEmpty) {
-      return result;
-    } else {
-      throw LocalException();
-    }
+    // if (result.isNotEmpty) {
+    return result;
+    // } else {
+    //   throw LocalException();
+    // }
   }
 
   @override
