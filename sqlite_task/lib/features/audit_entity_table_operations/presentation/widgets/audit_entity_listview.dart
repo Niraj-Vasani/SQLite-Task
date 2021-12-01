@@ -43,7 +43,7 @@ Widget _buildListItem(AuditEntityModel itemData) {
       ],
     ),
     child: ListTile(
-      title: Text(itemData.auditEntityName),
+      title: Text(itemData.auditEntityName.toString()),
       subtitle: Text(itemData.entityEndDate?.toString() ?? "No Date"),
     ),
   );

@@ -2,11 +2,11 @@ import 'dart:ffi';
 
 import 'package:moor_flutter/moor_flutter.dart';
 
-import '../../../../core/error/exceptions.dart';
 import '../models/audit_entity_model.dart';
 import 'moor/audit_entity_database.dart' as database;
 
 abstract class AuditEntityDataSource {
+  Stream? watchAuditEntity();
   Future<List<AuditEntityModel>> getAuditEntity();
   Future<Void> editAuditEntity(AuditEntityModel entity);
   Future<Void> deleteAuditEntity(AuditEntityModel entity);
@@ -20,17 +20,45 @@ class AuditEntityDataSourceImpl implements AuditEntityDataSource {
   AuditEntityDataSourceImpl(this.auditDatabase);
 
   @override
+  Stream? watchAuditEntity() {
+    // final streamData = auditDatabase.watchAllAudits();
+    // var result = <AuditEntityModel>[];
+    // streamData.listen((data) {
+    //   data.forEach((element) {
+    //     var entity = AuditEntityModel(
+    //       auditEntityId: element.auditEntityId,
+    //       auditEntityName: element.auditEntityName,
+    //       entityEndDate: element.entityEndDate?.toString(),
+    //     );
+    //     result.add(entity);
+    //   });
+    // });
+    // yield result;
+    return auditDatabase.watchAllAudits();
+  }
+
+  @override
   Future<List<AuditEntityModel>> getAuditEntity() async {
+    print(1);
     final data = await auditDatabase.getAllAudits();
+    print(2);
     var result = <AuditEntityModel>[];
-    data.forEach((element) {
-      var entity = AuditEntityModel(
-        auditEntityId: element.auditEntityId,
-        auditEntityName: element.auditEntityName,
-        entityEndDate: element.entityEndDate?.toString(),
-      );
-      result.add(entity);
-    });
+    print(3);
+    if (data.length != 0) {
+      print(4);
+      data.forEach((element) {
+        print(5);
+        var entity = AuditEntityModel(
+          auditEntityId: element.auditEntityId,
+          auditEntityName: element.auditEntityName,
+          entityEndDate: element.entityEndDate?.toString(),
+        );
+        print(6);
+        result.add(entity);
+      });
+      print(7);
+    }
+    print(8);
     // if (result.isNotEmpty) {
     return result;
     // } else {
@@ -69,7 +97,7 @@ class AuditEntityDataSourceImpl implements AuditEntityDataSource {
     var audit = database.AuditsCompanion(
       auditEntityId: Value(entity.auditEntityId),
       auditEntityName: Value(entity.auditEntityName),
-      // entityEndDate: Value(DateTime.parse(entity.entityEndDate!)),
+      entityEndDate: Value(DateTime.parse(entity.entityEndDate!)),
     );
 
     await auditDatabase.insertAudit(audit);

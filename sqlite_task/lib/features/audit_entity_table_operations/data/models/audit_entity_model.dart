@@ -13,9 +13,12 @@ class AuditEntityModel extends AuditEntity {
 
   factory AuditEntityModel.fromJson(Map<String, dynamic> json) {
     return AuditEntityModel(
-      auditEntityId: json["auditEntityId"],
-      auditEntityName: json["auditEntityName"],
-      entityEndDate: json["entityEndDate"],
+      // auditEntityId: json["AuditEntityId"] ?? 1,
+      // auditEntityName: json["AuditEntityName"] ?? "Unknown",
+      // entityEndDate: json["EntityEndDate"] ?? "No Date",
+      auditEntityId: json["AuditEntityId"],
+      auditEntityName: json["AuditEntityName"],
+      entityEndDate: json["EntityEndDate"],
     );
   }
 

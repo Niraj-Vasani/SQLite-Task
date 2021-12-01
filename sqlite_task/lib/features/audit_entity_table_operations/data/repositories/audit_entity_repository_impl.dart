@@ -16,6 +16,11 @@ class AuditEntityRepositoryImpl implements AuditEntityRepository {
   });
 
   @override
+  Stream? watchAuditEntity() {
+    return dataSource.watchAuditEntity();
+  }
+
+  @override
   Future<Either<Failure, List<AuditEntity?>>?>? getAuditEntity() async {
     try {
       final entityDatas = await dataSource.getAuditEntity();

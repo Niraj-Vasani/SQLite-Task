@@ -1,4 +1,5 @@
 import 'package:get_it/get_it.dart';
+import 'package:sqlite_task/features/audit_entity_table_operations/domain/usecases/watch_audit_entity.dart';
 import 'features/audit_entity_table_operations/data/datasources/audit_entity_data_source.dart';
 import 'features/audit_entity_table_operations/data/datasources/moor/audit_entity_database.dart';
 import 'features/audit_entity_table_operations/data/repositories/audit_entity_repository_impl.dart';
@@ -21,6 +22,7 @@ Future<void> init() async {
       deleteAuditEntityUsecase: sl.call(),
       insertAuditEntityUsecase: sl.call(),
       addAuditEntityJsonIntoDbUsecase: sl.call(),
+      watchAuditEntityUsecase: sl.call(),
     ),
   );
 
@@ -28,6 +30,7 @@ Future<void> init() async {
   sl.registerLazySingleton<AuditDatabase>(() => AuditDatabase());
 
   // usecases
+  sl.registerLazySingleton<WatchAuditEntity>(() => WatchAuditEntity(sl.call()));
   sl.registerLazySingleton<GetAuditEntity>(() => GetAuditEntity(sl.call()));
   sl.registerLazySingleton<EditAuditEntity>(() => EditAuditEntity(sl.call()));
   sl.registerLazySingleton<DeleteAuditEntity>(
